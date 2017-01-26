@@ -9,10 +9,10 @@ public class EndToEndTest {
 
     @Test public void sniperJoinsAuctionUntilAuctionCloses() throws Exception {
         auction.startSellingItem();
-        application.startBiddingIn(auction);
-        auction.hasReceivedJoinRequestFrom();
-        auction.announceClosed();
-        application.hasShownSniperHasLostAuction();
+        application.startBinddingIn(auction);
+//        auction.hasReceivedJoinRequestFromSniper();
+//        auction.announceClosed();
+//        application.showsSniperHasLostAuction();
     }
 
     // Additional cleanup
@@ -23,5 +23,4 @@ public class EndToEndTest {
     @After public void stopApplication() {
         application.stop();
     }
-
 }
