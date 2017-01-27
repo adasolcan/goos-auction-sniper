@@ -6,8 +6,11 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class MainWindow extends JFrame {
+    public static final String STATUS_JOINING = "JOINING";
+    public static final String STATUS_LOST = "LOST";
+    public static final String STATUS_BINDING = "BINDING";
     public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
-    private final JLabel sniperStatus = createLabel(Main.STATUS_JOINING);
+    private final JLabel sniperStatus = createLabel(STATUS_JOINING);
 
     public MainWindow() {
         super("Auction Snipper");

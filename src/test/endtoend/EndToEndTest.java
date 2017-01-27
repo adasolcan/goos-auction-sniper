@@ -9,13 +9,30 @@ public class EndToEndTest {
 
     @Test public void sniperJoinsAuctionUntilAuctionCloses() throws Exception {
         auction.startSellingItem();
+
         application.startBinddingIn(auction);
-        auction.hasReceivedJoinRequestFromSniper();
+        auction.hasReceivedJoinRequestFromSniper(ApplicationRunner.SNIPER_XMPP_ID);
+
         auction.announceClosed();
         application.showsSniperHasLostAuction();
     }
 
-    // Additional cleanup
+    @Test public void sniperMakesAHigherBidButLoses() throws Exception {
+        auction.startSellingItem();
+
+        application.startBinddingIn(auction);
+        auction.hasReceivedJoinRequestFromSniper(ApplicationRunner.SNIPER_XMPP_ID);
+
+        auction.reportPrice(1000, 98, "other bidder");
+//        application.hasShownSniperIsBidding();
+
+//        auction.hasReceivedBid(1098, ApplicationRunner.SNIPER_XMPP_ID);
+//
+//        auction.announceClosed();
+//        application.showsSniperHasLostAuction();
+    }
+
+        // Additional cleanup
     @After public void stopAuction() {
         auction.stop();
     }

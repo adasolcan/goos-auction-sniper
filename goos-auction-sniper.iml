@@ -13,5 +13,6 @@
     <orderEntry type="library" name="smack-3.0.4" level="project" />
     <orderEntry type="library" name="windowlicker-core-r268" level="project" />
     <orderEntry type="library" name="smackx-3.1.0" level="project" />
+    <orderEntry type="library" name="org.jmock:jmock:2.8.0" level="project" />
   </component>
 </module>
