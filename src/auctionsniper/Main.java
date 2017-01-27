@@ -8,12 +8,12 @@ import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Message.Type;
 
 public class Main {
     public static final String AUCTION_RESOURCE = "Auction";
     public static final String ITEM_ID_AS_LOGIN = "auction-%s";
     public static final String AUCTION_ID_FORMAT = ITEM_ID_AS_LOGIN + "@%s/" + AUCTION_RESOURCE;
-
     public static final String STATUS_JOINING = "JOINING";
     public static final String STATUS_LOST = "LOST";
     public static final String SNIPER_STATUS_NAME = "STATUS NAME";
@@ -30,8 +30,28 @@ public class Main {
 
     public static void main(String... args) throws Exception {
         Main main = new Main();
+        XMPPConnection connection = connectTo(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
+        Chat chat = connection.getChatManager().createChat(auctionId(args[ARG_ITEM_ID], connection), new MessageListener() {
+            @Override
+            public void processMessage(Chat aChat, Message message) {
+                // nothing yet
+            }
+        });
+        chat.sendMessage(new Message());
     }
-    
+
+    public static XMPPConnection connectTo(String hostname, String  username, String password) throws XMPPException {
+        XMPPConnection connection = new XMPPConnection(hostname);
+        connection.connect();
+        connection.login(username, password, AUCTION_RESOURCE);
+
+        return connection;
+    }
+
+    private static String auctionId(String itemId, XMPPConnection connection) {
+        return String.format(AUCTION_ID_FORMAT, itemId, connection.getServiceName());
+    }
+
     private void startUserInterface() throws Exception {
         SwingUtilities.invokeAndWait(new Runnable() {
             public void run() {
