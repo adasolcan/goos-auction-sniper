@@ -11,6 +11,7 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Message.Type;
 
 public class Main {
+    @SuppressWarnings("unused") private Chat notToBeGCd;
     public static final String AUCTION_RESOURCE = "Auction";
     public static final String ITEM_ID_AS_LOGIN = "auction-%s";
     public static final String AUCTION_ID_FORMAT = ITEM_ID_AS_LOGIN + "@%s/" + AUCTION_RESOURCE;
@@ -31,13 +32,26 @@ public class Main {
     public static void main(String... args) throws Exception {
         Main main = new Main();
         XMPPConnection connection = connectTo(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
-        Chat chat = connection.getChatManager().createChat(auctionId(args[ARG_ITEM_ID], connection), new MessageListener() {
+        main.joinAuction(
+                connectTo(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]),
+                args[ARG_ITEM_ID]
+        );
+    }
+
+    private void joinAuction(XMPPConnection connection, String itemID) throws XMPPException {
+        final Chat chat = connection.getChatManager().createChat(auctionId(itemID, connection), new MessageListener() {
             @Override
-            public void processMessage(Chat aChat, Message message) {
-                // nothing yet
+            public void processMessage(Chat chat, Message message) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        ui.showStatus(Main.STATUS_LOST);
+                    }
+                });
             }
         });
-        chat.sendMessage(new Message());
+        this.notToBeGCd = chat;
+        chat.sendMessage(new Message(""));
     }
 
     public static XMPPConnection connectTo(String hostname, String  username, String password) throws XMPPException {

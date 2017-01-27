@@ -11,8 +11,8 @@ public class EndToEndTest {
         auction.startSellingItem();
         application.startBinddingIn(auction);
         auction.hasReceivedJoinRequestFromSniper();
-//        auction.announceClosed();
-//        application.showsSniperHasLostAuction();
+        auction.announceClosed();
+        application.showsSniperHasLostAuction();
     }
 
     // Additional cleanup
