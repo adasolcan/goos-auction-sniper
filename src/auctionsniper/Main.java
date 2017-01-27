@@ -1,16 +1,11 @@
 package auctionsniper;
 
 import auctionsniper.ui.MainWindow;
-import auctionsniper.AuctionEventListener;
-import javax.swing.SwingUtilities;
-
 import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.packet.Message.Type;
 
+import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -53,10 +48,13 @@ public class Main implements AuctionEventListener {
     }
 
     public void auctionClosed() {
+    }
+
+    public void currentPrice(int price, int increment) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                ui.showStatus(MainWindow.STATUS_LOST);
+                ui.showStatus(MainWindow.STATUS_BINDING);
             }
         });
     }

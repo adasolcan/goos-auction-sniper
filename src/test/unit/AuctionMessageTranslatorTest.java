@@ -1,7 +1,7 @@
 package test.unit;
 
-import auctionsniper.AuctionMessageTranslator;
 import auctionsniper.AuctionEventListener;
+import auctionsniper.AuctionMessageTranslator;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.packet.Message;
 import org.jmock.Expectations;
@@ -17,12 +17,22 @@ public class AuctionMessageTranslatorTest {
 
     @Test public void notifiesAuctionClosedWhenCloseMessageReceived() {
         context.checking(new Expectations() {{
-            oneOf(listener).auctionClosed();
+            exactly(1).of(listener).auctionClosed();
         }});
 
         Message message = new Message();
-        message.setBody("SQLVersion 1.1; Even: CLOSE;");
+        message.setBody("SQLVersion: 1.1; Event: CLOSE;");
 
+        translator.processMessage(UNUSED_CHAT, message);
+    }
+
+    @Test public void notifiesBidDetailsWhenCurrentPriceMessageReceived() {
+        context.checking(new Expectations() {{
+            exactly(1).of(listener).currentPrice(192, 7);
+        }});
+
+        Message message = new Message();
+        message.setBody("SQLVersion: 1.1; Event: PRICE; CurrentPrice: 192; Increment: 7; Bidder: Someone else;");
         translator.processMessage(UNUSED_CHAT, message);
     }
 }

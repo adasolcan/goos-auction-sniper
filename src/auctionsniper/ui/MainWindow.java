@@ -1,14 +1,15 @@
 package auctionsniper.ui;
 
 import auctionsniper.Main;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class MainWindow extends JFrame {
-    public static final String STATUS_JOINING = "JOINING";
-    public static final String STATUS_LOST = "LOST";
-    public static final String STATUS_BINDING = "BINDING";
+    public static final String STATUS_JOINING = "Joining";
+    public static final String STATUS_LOST = "Lost";
+    public static final String STATUS_BINDING = "Binding";
     public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
     private final JLabel sniperStatus = createLabel(STATUS_JOINING);
 
