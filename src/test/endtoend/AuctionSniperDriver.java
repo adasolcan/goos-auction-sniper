@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class AuctionSniperDriver extends JFrameDriver {
     public AuctionSniperDriver(int timeoutMillis) {
-        super( new GesturePerformer(),
+        super(new GesturePerformer(),
                 JFrameDriver.topLevelFrame(
                         named(MainWindow.MAIN_WINDOW_NAME),
                         showingOnScreen()

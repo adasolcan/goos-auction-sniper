@@ -6,7 +6,7 @@ import org.jivesoftware.smack.packet.Message;
 
 import java.util.HashMap;
 
-public class AuctionMessageTranslator implements MessageListener{
+public class AuctionMessageTranslator implements MessageListener {
     private final AuctionEventListener listener;
 
     public AuctionMessageTranslator(AuctionEventListener listener) {
@@ -27,7 +27,7 @@ public class AuctionMessageTranslator implements MessageListener{
         }
     }
 
-    private HashMap<String,String> unpackEventFrom(Message message) {
+    private HashMap<String, String> unpackEventFrom(Message message) {
         HashMap<String, String> event = new HashMap<String, String>();
         for (String element : message.getBody().split(";")) {
             String[] pair = element.split(":");

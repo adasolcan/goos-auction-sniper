@@ -19,8 +19,8 @@ public class FakeAuctionServer {
     private static final String AUCTION_PASSWORD = "auction";
     private final String itemId;
     private final XMPPConnection connection;
-    private Chat currentChat;
     private final SingleMessageListener messageListener = new SingleMessageListener();
+    private Chat currentChat;
 
     public FakeAuctionServer(String itemId) {
         this.itemId = itemId;

@@ -15,7 +15,8 @@ public class AuctionMessageTranslatorTest {
     private final AuctionEventListener listener = context.mock(AuctionEventListener.class);
     private final AuctionMessageTranslator translator = new AuctionMessageTranslator(listener);
 
-    @Test public void notifiesAuctionClosedWhenCloseMessageReceived() {
+    @Test
+    public void notifiesAuctionClosedWhenCloseMessageReceived() {
         context.checking(new Expectations() {{
             exactly(1).of(listener).auctionClosed();
         }});
@@ -26,7 +27,8 @@ public class AuctionMessageTranslatorTest {
         translator.processMessage(UNUSED_CHAT, message);
     }
 
-    @Test public void notifiesBidDetailsWhenCurrentPriceMessageReceived() {
+    @Test
+    public void notifiesBidDetailsWhenCurrentPriceMessageReceived() {
         context.checking(new Expectations() {{
             exactly(1).of(listener).currentPrice(192, 7);
         }});
