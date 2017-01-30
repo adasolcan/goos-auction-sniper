@@ -2,5 +2,7 @@ package auctionsniper;
 
 public interface Auction {
 
-    public void bid(int amount);
+    void join();
+
+    void bid(int amount);
 }
