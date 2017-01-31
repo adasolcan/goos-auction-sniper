@@ -15,7 +15,7 @@ public class MainWindow extends JFrame {
     private final JLabel sniperStatus = createLabel(STATUS_JOINING);
 
     public MainWindow() {
-        super("Auction Snipper");
+        super("Auction Sniper");
         setName(MAIN_WINDOW_NAME);
         add(sniperStatus);
         pack();
@@ -28,6 +28,10 @@ public class MainWindow extends JFrame {
         result.setName(Main.SNIPER_STATUS_NAME);
         result.setBorder(new LineBorder(Color.BLACK));
         return result;
+    }
+
+    public String getStatus() {
+        return sniperStatus.getText();
     }
 
     public void showStatus(String status) {
