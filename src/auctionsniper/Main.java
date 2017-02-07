@@ -20,7 +20,6 @@ public class Main {
     private static final int ARG_HOSTNAME = 0;
     private static final int ARG_USERNAME = 1;
     private static final int ARG_PASSWORD = 2;
-    private static final int ARG_ITEM_ID = 3;
     private SnipersTableModel snipers = new SnipersTableModel();
     private Chat notToBeGCd;
     private MainWindow ui;
@@ -31,10 +30,11 @@ public class Main {
 
     public static void main(String... args) throws Exception {
         Main main = new Main();
-        main.joinAuction(
-                connectTo(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]),
-                args[ARG_ITEM_ID]
-        );
+        XMPPConnection connection = connectTo(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
+        main.disconnectWhenUICloses(connection);
+        for (int i = 3; i < args.length; i++) {
+            main.joinAuction(connection, args[i]);
+        }
     }
 
     public static XMPPConnection connectTo(String hostname, String username, String password) throws XMPPException {
@@ -50,7 +50,7 @@ public class Main {
     }
 
     private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException {
-        disconnectWhenUICloses(connection);
+        safelyAddItemToModel(itemId);
         Chat chat = connection.getChatManager().createChat(
                 auctionId(itemId, connection),
                 null
@@ -63,6 +63,15 @@ public class Main {
                 new AuctionSniper(itemId, auction, new SwingThreadSniperListener(snipers)))
         );
         auction.join();
+    }
+
+    private void safelyAddItemToModel(String itemId) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                snipers.addSniper(SniperSnapshot.joining(itemId));
+            }
+        });
     }
 
     private void startUserInterface() throws Exception {
