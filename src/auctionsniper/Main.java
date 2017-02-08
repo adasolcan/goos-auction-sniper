@@ -32,6 +32,7 @@ public class Main {
         Main main = new Main();
         XMPPConnection connection = connectTo(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
         main.disconnectWhenUICloses(connection);
+        main.addUserRequestListenerFor(connection);
         for (int i = 3; i < args.length; i++) {
             main.joinAuction(connection, args[i]);
         }
@@ -79,6 +80,25 @@ public class Main {
             public void run() {
                 snipers = new SnipersTableModel();
                 ui = new MainWindow(snipers);
+            }
+        });
+    }
+
+    private void addUserRequestListenerFor(final XMPPConnection connection) {
+        ui.addUserRequestListener(new UserRequestListener() {
+            @Override
+            public void joinAuction(String itemId) {
+                snipers.addSniper(SniperSnapshot.joining(itemId));
+                Chat chat = connection.getChatManager().createChat(auctionId(itemId, connection), null);
+
+                notToBeGCd = chat;
+
+                Auction auction = new XMPPAuction(chat);
+                chat.addMessageListener(new AuctionMessageTranslator(
+                        connection.getUser(),
+                        new AuctionSniper(itemId, auction, new SwingThreadSniperListener(snipers))
+                ));
+                auction.join();
             }
         });
     }
