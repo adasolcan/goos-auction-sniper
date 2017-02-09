@@ -1,8 +1,7 @@
 package auctionsniper.ui;
 
 import auctionsniper.Announcer;
-import auctionsniper.SniperListener;
-import auctionsniper.SniperSnapshot;
+import auctionsniper.SniperPortfolio;
 import auctionsniper.UserRequestListener;
 
 import javax.swing.*;
@@ -11,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MainWindow extends JFrame {
-    public static final String STATUS_JOINING = "Joining";
     public static final String STATUS_LOST = "Losing";
     public static final String STATUS_BIDDING = "Bidding";
     public static final String STATUS_WINNING = "Winning";
@@ -23,10 +21,10 @@ public class MainWindow extends JFrame {
     private final Announcer<UserRequestListener> userRequests = Announcer.to(UserRequestListener.class);
     private SnipersTableModel snipers = new SnipersTableModel();
 
-    public MainWindow(SniperListener snipers) {
+    public MainWindow(SniperPortfolio portfolio) {
         super(APPLICATION_TITLE);
         setName(MAIN_WINDOW_NAME);
-        fillContentPanel(makeSniperTable(), makeControls());
+        fillContentPanel(makeSniperTable(portfolio), makeControls());
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
@@ -39,13 +37,10 @@ public class MainWindow extends JFrame {
         contentPane.add(new JScrollPane(snipersTable), BorderLayout.CENTER);
     }
 
-    public void sniperStateChanged(SniperSnapshot sniperSnapshot) {
-        snipers.sniperStateChanged(sniperSnapshot);
-    }
-
-    private JTable makeSniperTable() {
-        snipers = new SnipersTableModel();
-        final JTable snipersTable = new JTable(snipers);
+    private JTable makeSniperTable(SniperPortfolio portfolio) {
+        SnipersTableModel model = new SnipersTableModel();
+        portfolio.addPortfolioListener(model);
+        JTable snipersTable = new JTable(snipers);
         snipersTable.setName(SNIPERS_TABLE_NAME);
         return snipersTable;
     }

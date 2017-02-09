@@ -14,6 +14,17 @@ public class ApplicationRunner {
 
     private AuctionSniperDriver driver;
 
+    private static String[] arguments(FakeAuctionServer... auctions) {
+        String[] arguments = new String[auctions.length + 3];
+        arguments[0] = XMPP_HOSTNAME;
+        arguments[1] = SNIPER_ID;
+        arguments[2] = SNIPER_PASSWORD;
+        for (int i = 0; i < auctions.length; i++) {
+            arguments[i + 3] = auctions[i].getItemId();
+        }
+        return arguments;
+    }
+
     public void startBiddingIn(final FakeAuctionServer... auctions) {
         startSniper();
         for (FakeAuctionServer auction : auctions) {
@@ -43,17 +54,6 @@ public class ApplicationRunner {
         if (driver != null) {
             driver.dispose();
         }
-    }
-
-    private static String[] arguments(FakeAuctionServer... auctions) {
-        String[] arguments = new String[auctions.length + 3];
-        arguments[0] = XMPP_HOSTNAME;
-        arguments[1] = SNIPER_ID;
-        arguments[2] = SNIPER_PASSWORD;
-        for (int i = 0; i < auctions.length; i++) {
-            arguments[i + 3] = auctions[i].getItemId();
-        }
-        return arguments;
     }
 
     private void startSniper() {

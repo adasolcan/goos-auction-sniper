@@ -25,6 +25,10 @@ public class Announcer<T extends EventListener> {
                 }));
     }
 
+    public static <T extends EventListener> Announcer<T> to(Class<? extends T> listenerType) {
+        return new Announcer<T>(listenerType);
+    }
+
     public void addListener(T listener) {
         listeners.add(listener);
     }
@@ -42,26 +46,18 @@ public class Announcer<T extends EventListener> {
             for (T listener : listeners) {
                 m.invoke(listener, args);
             }
-        }
-        catch (IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             throw new IllegalArgumentException("could not invoke listener", e);
-        }
-        catch (InvocationTargetException e) {
+        } catch (InvocationTargetException e) {
             Throwable cause = e.getCause();
 
             if (cause instanceof RuntimeException) {
-                throw (RuntimeException)cause;
-            }
-            else if (cause instanceof Error) {
-                throw (Error)cause;
-            }
-            else {
+                throw (RuntimeException) cause;
+            } else if (cause instanceof Error) {
+                throw (Error) cause;
+            } else {
                 throw new UnsupportedOperationException("listener threw exception", cause);
             }
         }
-    }
-
-    public static <T extends EventListener> Announcer<T> to(Class<? extends T> listenerType) {
-        return new Announcer<T>(listenerType);
     }
 }

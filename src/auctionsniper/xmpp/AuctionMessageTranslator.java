@@ -1,5 +1,6 @@
-package auctionsniper;
+package auctionsniper.xmpp;
 
+import auctionsniper.AuctionEventListener;
 import auctionsniper.AuctionEventListener.PriceSource;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.MessageListener;
@@ -29,15 +30,6 @@ public class AuctionMessageTranslator implements MessageListener {
                     event.isFrom(sniperId)
             );
         }
-    }
-
-    private HashMap<String, String> unpackEventFrom(Message message) {
-        HashMap<String, String> event = new HashMap<String, String>();
-        for (String element : message.getBody().split(";")) {
-            String[] pair = element.split(":");
-            event.put(pair[0].trim(), pair[1].trim());
-        }
-        return event;
     }
 
     private static class AuctionEvent {
