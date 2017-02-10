@@ -40,7 +40,8 @@ public class SniperSnapshotTest {
                 bidding.winning(678).closed());
     }
 
-    @Test public void
+    @Test
+    public void
     comparesItemIdentities() {
         assertTrue(
                 SniperSnapshot.joining("item 1").isForSameItemAs(

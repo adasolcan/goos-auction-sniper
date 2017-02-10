@@ -4,7 +4,6 @@ public class AuctionSniper implements AuctionEventListener {
     private final Announcer<SniperListener> listeners = Announcer.to(SniperListener.class);
     private final Auction auction;
     private final Item item;
-    private boolean isWinning = false;
     private SniperSnapshot snapshot;
 
     public AuctionSniper(Item item, Auction auction) {
@@ -18,12 +17,17 @@ public class AuctionSniper implements AuctionEventListener {
         notifyChange();
     }
 
+    public void auctionFailed() {
+        snapshot = snapshot.failed();
+        notifyChange();
+    }
+
     public void addSniperListener(SniperListener listener) {
         listeners.addListener(listener);
     }
 
     public void currentPrice(int price, int increment, PriceSource priceSource) {
-        switch(priceSource) {
+        switch (priceSource) {
             case FromSniper:
                 snapshot = snapshot.winning(price);
                 break;

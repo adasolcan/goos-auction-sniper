@@ -11,16 +11,18 @@ public class XMPPAuction implements Auction {
     public static final String JOIN_COMMAND_FORMAT = "SOLVersion: 1.1; Command: JOIN;";
     public static final String BID_COMMAND_FORMAT = "SOLVersion: 1.1; Command: BID; Price: %d;";
 
-    private final Announcer<AuctionEventListener> auctionEventListeners;
+    private final Announcer<AuctionEventListener> auctionEventListeners = Announcer.to(AuctionEventListener.class);
     private final Chat chat;
+    private final XMPPFailureReporter failureReporter;
 
-    public XMPPAuction(XMPPConnection connection, String auctionJID) {
-        this.auctionEventListeners = Announcer.to(AuctionEventListener.class);
+    public XMPPAuction(XMPPConnection connection, String auctionJID, XMPPFailureReporter failureReporter) {
+        this.failureReporter = failureReporter;
+        AuctionMessageTranslator translator = translatorFor(connection);
         this.chat = connection.getChatManager().createChat(
                 auctionJID,
-                new AuctionMessageTranslator(connection.getUser(), auctionEventListeners.announce())
+                translator
         );
-        addAuctionEventListener(chatDisconnectorFor());
+        addAuctionEventListener(chatDisconnectorFor(translator));
     }
 
     public void bid(int amount) {
@@ -35,9 +37,13 @@ public class XMPPAuction implements Auction {
         auctionEventListeners.addListener(listener);
     }
 
-    private AuctionEventListener chatDisconnectorFor() {
+    private AuctionEventListener chatDisconnectorFor(final AuctionMessageTranslator translator) {
         return new AuctionEventListener() {
             public void auctionClosed() {
+            }
+
+            public void auctionFailed() {
+                chat.removeMessageListener(translator);
             }
 
             public void currentPrice(int price, int increment, PriceSource priceSource) {
@@ -51,5 +57,9 @@ public class XMPPAuction implements Auction {
         } catch (XMPPException e) {
             e.printStackTrace();
         }
+    }
+
+    private AuctionMessageTranslator translatorFor(XMPPConnection connection) {
+        return new AuctionMessageTranslator(connection.getUser(), auctionEventListeners.announce(), failureReporter);
     }
 }

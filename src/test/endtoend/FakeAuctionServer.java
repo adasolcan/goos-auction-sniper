@@ -1,6 +1,5 @@
 package test.endtoend;
 
-import auctionsniper.Main;
 import auctionsniper.xmpp.XMPPAuction;
 import org.hamcrest.Matcher;
 import org.jivesoftware.smack.*;
@@ -83,6 +82,10 @@ public class FakeAuctionServer {
             throws InterruptedException {
         messageListener.receivesAMessage(messageMatcher);
         assertThat(currentChat.getParticipant(), equalTo(sniperId));
+    }
+
+    public void sendInvalidMessageContaining(String brokenMessage) throws XMPPException {
+        currentChat.sendMessage(brokenMessage);
     }
 
     public class SingleMessageListener implements MessageListener {

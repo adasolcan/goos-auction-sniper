@@ -17,21 +17,23 @@ public class SniperSnapshot {
         this.state = state;
     }
 
+    public static SniperSnapshot joining(String itemId) {
+        return new SniperSnapshot(itemId, 0, 0, SniperState.JOINING);
+    }
+
     @Override
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
+
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
-    }
-
-    public static SniperSnapshot joining(String itemId) {
-        return new SniperSnapshot(itemId, 0, 0, SniperState.JOINING);
     }
 
     public SniperSnapshot bidding(int newLastPrice, int newLastBid) {
@@ -54,4 +56,7 @@ public class SniperSnapshot {
         return itemId.equals(sniperSnapshot.itemId);
     }
 
+    public SniperSnapshot failed() {
+        return new SniperSnapshot(itemId, 0, 0, SniperState.FAILED);
+    }
 }

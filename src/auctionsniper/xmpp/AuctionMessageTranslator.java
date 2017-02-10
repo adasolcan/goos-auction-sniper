@@ -11,14 +11,26 @@ import java.util.HashMap;
 public class AuctionMessageTranslator implements MessageListener {
     private final AuctionEventListener listener;
     private final String sniperId;
+    private final XMPPFailureReporter failureReporter;
 
-    public AuctionMessageTranslator(String sniperId, AuctionEventListener listener) {
+    public AuctionMessageTranslator(String sniperId, AuctionEventListener listener, XMPPFailureReporter failureReporter) {
         this.listener = listener;
         this.sniperId = sniperId;
+        this.failureReporter = failureReporter;
     }
 
     public void processMessage(Chat chat, Message message) {
-        AuctionEvent event = AuctionEvent.from(message.getBody());
+        String messageBody = message.getBody();
+        try {
+            translate(messageBody);
+        } catch (Exception parseException) {
+            failureReporter.cannotTranslateMessage(sniperId, messageBody, parseException);
+            listener.auctionFailed();
+        }
+    }
+
+    private void translate(String messageBody) throws Exception {
+        AuctionEvent event = AuctionEvent.from(messageBody);
 
         String eventType = event.type();
         if ("CLOSE".equals(eventType)) {
@@ -47,28 +59,32 @@ public class AuctionMessageTranslator implements MessageListener {
             return messageBody.split(";");
         }
 
-        public String type() {
+        public String type() throws MissingValueException {
             return get("Event");
         }
 
-        public int currentPrice() {
+        public int currentPrice() throws Exception {
             return getInt("CurrentPrice");
         }
 
-        public int increment() {
+        public int increment() throws Exception {
             return getInt("Increment");
         }
 
-        public PriceSource isFrom(String sniperId) {
+        public PriceSource isFrom(String sniperId) throws MissingValueException {
             return sniperId.equals(bidder()) ? PriceSource.FromSniper : PriceSource.FromOtherBidder;
         }
 
-        private int getInt(String fieldName) {
+        private int getInt(String fieldName) throws Exception {
             return Integer.parseInt(get(fieldName));
         }
 
-        private String get(String fieldName) {
-            return fields.get(fieldName);
+        private String get(String fieldName) throws MissingValueException {
+            final String value = fields.get(fieldName);
+            if (value == null) {
+                throw new MissingValueException(fieldName);
+            }
+            return value;
         }
 
         private void addField(String field) {
@@ -76,8 +92,14 @@ public class AuctionMessageTranslator implements MessageListener {
             fields.put(pair[0].trim(), pair[1].trim());
         }
 
-        private String bidder() {
+        private String bidder() throws MissingValueException {
             return get("Bidder");
+        }
+    }
+
+    private static class MissingValueException extends Exception {
+        public MissingValueException(String fieldName) {
+            super("Missing value for " + fieldName);
         }
     }
 }

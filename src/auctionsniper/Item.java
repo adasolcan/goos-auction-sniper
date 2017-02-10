@@ -13,11 +13,19 @@ public class Item {
     }
 
     @Override
-    public boolean equals(Object obj) { return EqualsBuilder.reflectionEquals(this, obj); }
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
     @Override
-    public int hashCode() { return HashCodeBuilder.reflectionHashCode(this); }
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+
     @Override
-    public String toString() { return "Item: " + identifier + ", stop price: " + stopPrice; }
+    public String toString() {
+        return "Item: " + identifier + ", stop price: " + stopPrice;
+    }
 
     public boolean allowsBid(int bid) {
         return bid <= stopPrice;

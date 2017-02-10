@@ -69,11 +69,13 @@ public class MainWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 userRequests.announce().joinAuction(new Item(itemId(), stopPrice()));
             }
+
             private String itemId() {
                 return itemIdField.getText();
             }
+
             private int stopPrice() {
-                return ((Number)stopPriceField.getValue()).intValue();
+                return ((Number) stopPriceField.getValue()).intValue();
             }
         });
 

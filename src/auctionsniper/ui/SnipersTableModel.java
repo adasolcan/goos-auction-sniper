@@ -1,7 +1,10 @@
 package auctionsniper.ui;
 
-import auctionsniper.*;
+import auctionsniper.AuctionSniper;
+import auctionsniper.SniperListener;
 import auctionsniper.SniperPortfolio.PortfolioListener;
+import auctionsniper.SniperSnapshot;
+import auctionsniper.SniperState;
 import com.objogate.exception.Defect;
 
 import javax.swing.table.AbstractTableModel;
