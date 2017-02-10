@@ -1,6 +1,7 @@
-package test.unit;
+package test.unit.ui;
 
 import auctionsniper.AuctionSniper;
+import auctionsniper.Item;
 import auctionsniper.SniperSnapshot;
 import auctionsniper.SniperState;
 import auctionsniper.ui.Column;
@@ -20,9 +21,10 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 
 public class SnipersTableModelTest {
+    private static final String ITEM_ID = "item 0";
     private final Mockery context = new Mockery();
     private final SnipersTableModel model = new SnipersTableModel();
-    private final AuctionSniper sniper = new AuctionSniper("item 0", null);
+    private final AuctionSniper sniper = new AuctionSniper(new Item(ITEM_ID, 234), null);
     private TableModelListener listener = context.mock(TableModelListener.class);
 
     @Before
@@ -70,13 +72,13 @@ public class SnipersTableModelTest {
         model.sniperAdded(sniper);
 
         assertEquals(1, model.getRowCount());
-        assertRowMatchesSnapshot(0, SniperSnapshot.joining("item 0"));
+        assertRowMatchesSnapshot(0, SniperSnapshot.joining(ITEM_ID));
 
     }
 
     @Test
     public void holdsSnipersInAdditionOrder() {
-        AuctionSniper sniper2 = new AuctionSniper("item 1", null);
+        AuctionSniper sniper2 = new AuctionSniper(new Item("item 1", 234), null);
 
         context.checking(new Expectations() {{
             ignoring(listener);
@@ -85,13 +87,13 @@ public class SnipersTableModelTest {
         model.sniperAdded(sniper);
         model.sniperAdded(sniper2);
 
-        assertEquals("item 0", cellValue(0, Column.ITEM_IDENTIFIER));
+        assertEquals(ITEM_ID, cellValue(0, Column.ITEM_IDENTIFIER));
         assertEquals("item 1", cellValue(1, Column.ITEM_IDENTIFIER));
     }
 
     @Test
     public void updatesCorrectRowForSniper() {
-        AuctionSniper sniper2 = new AuctionSniper("item 1", null);
+        AuctionSniper sniper2 = new AuctionSniper(new Item("item 1", 234), null);
 
         context.checking(new Expectations() {{
             allowing(listener).tableChanged(with(anyInsertionEvent()));

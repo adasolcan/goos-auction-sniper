@@ -1,4 +1,4 @@
-package test.unit;
+package test.unit.xmpp;
 
 import auctionsniper.AuctionEventListener;
 import auctionsniper.AuctionEventListener.PriceSource;

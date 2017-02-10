@@ -1,7 +1,8 @@
-package test.unit;
+package test.unit.xmpp;
 
 import auctionsniper.Auction;
 import auctionsniper.AuctionEventListener;
+import auctionsniper.Item;
 import auctionsniper.xmpp.XMPPAuctionHouse;
 import org.junit.After;
 import org.junit.Before;
@@ -49,7 +50,7 @@ public class XMPPAuctionHouseTest {
 
         CountDownLatch auctionWasClosed = new CountDownLatch(1);
 
-        Auction auction = auctionHouse.auctionFor(auctionServer.getItemId());
+        Auction auction = auctionHouse.auctionFor(new Item(auctionServer.getItemId(), 567));
         auction.addAuctionEventListener(auctionClosedListener(auctionWasClosed));
         auction.join();
         auctionServer.hasReceivedJoinRequestFrom(ApplicationRunner.SNIPER_XMPP_ID);
