@@ -15,5 +15,6 @@
     <orderEntry type="library" name="smackx-3.1.0" level="project" />
     <orderEntry type="library" name="org.jmock:jmock:2.6.0" level="project" />
     <orderEntry type="library" name="org.jmock:jmock-junit4:2.8.2" level="project" />
+    <orderEntry type="library" name="commons-lang-2.2" level="project" />
   </component>
 </module>

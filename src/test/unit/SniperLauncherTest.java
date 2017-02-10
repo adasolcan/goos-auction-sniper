@@ -20,26 +20,29 @@ public class SniperLauncherTest {
 
     @Test
     public void addsNewSniperToCollectorAndThenJoinsAuction() {
-        final String itemId = "item123";
+        final Item item = new Item("item123", 456);
 
         context.checking(new Expectations() {{
-            allowing(auctionHouse).auctionFor(itemId);
+            allowing(auctionHouse).auctionFor(item);
             will(returnValue(auction));
 
-            oneOf(auction).addAuctionEventListener(with(sniperForItem(itemId)));
+            oneOf(auction).addAuctionEventListener(with(sniperForItem(item)));
             when(auctionState.is("not joined"));
-            oneOf(sniperCollector).addSniper(with(sniperForItem(itemId)));
+            oneOf(sniperCollector).addSniper(with(sniperForItem(item)));
             when(auctionState.is("not joined"));
 
             one(auction).join();
             then(auctionState.is("joined"));
         }});
 
-        launcher.joinAuction(itemId);
+        launcher.joinAuction(item);
     }
 
-    protected Matcher<AuctionSniper> sniperForItem(String itemId) {
-        return new FeatureMatcher<AuctionSniper, String>(equalTo(itemId), "sniper with item id", "itemId") {
+    protected Matcher<AuctionSniper> sniperForItem(Item item) {
+        return new FeatureMatcher<AuctionSniper, String>(
+                equalTo(item.identifier),
+                "sniper with item id",
+                "itemId") {
             @Override
             protected String featureValueOf(AuctionSniper actual) {
                 return actual.getSnapshot().itemId;
